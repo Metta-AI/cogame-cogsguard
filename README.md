@@ -1,4 +1,4 @@
-# cogame-cogsgaurd
+# cogame-cogsguard
 
 CogsGuard game package for [CoGames](https://github.com/Metta-AI/cogames).
 
