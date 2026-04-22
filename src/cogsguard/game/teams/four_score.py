@@ -10,7 +10,6 @@ from cogames.core import CoGameMissionVariant, Deps
 from cogsguard.game.clips.clips import NoClipsVariant
 from cogsguard.game.extractors import ExtractorsVariant
 from cogsguard.game.teams.team import TeamConfig, TeamVariant
-from cogsguard.missions.machina_1 import CvCMachina1Variant
 from cogsguard.missions.mission import CvCMission
 from cogsguard.missions.terrain import CompoundLocation, MachinaTerrainVariant
 from cogames.variants import ResolvedDeps
@@ -33,6 +32,11 @@ class FourScoreVariant(CoGameMissionVariant):
 
     @override
     def dependencies(self) -> Deps:
+        # Lazy import: cogsguard.missions.machina_1 → cogsguard.game.cargo →
+        # cogsguard.game.__init__ → cogsguard.game.teams.four_score is a cycle.
+        # Deferring keeps the type reference off the module-init path.
+        from cogsguard.missions.machina_1 import CvCMachina1Variant  # noqa: PLC0415
+
         return Deps(
             required=[
                 CvCMachina1Variant,
