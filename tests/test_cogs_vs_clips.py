@@ -105,10 +105,25 @@ def test_machina_1_team_station_tags_win_under_dinky_normalization() -> None:
     assert "type:c:scrambler" not in tag_to_id
 
 
-def test_cvc_enables_aoe_mask_observation() -> None:
+def test_cvc_uses_territory_observation() -> None:
     env = make_machina1_mission().make_env()
-    assert env.game.obs.aoe_mask is True
-    env.game.id_map().feature_id("aoe_mask")
+    assert env.game.obs.aoe_mask is False
+    assert env.game.obs.territory is True
+    id_map = env.game.id_map()
+    with pytest.raises(KeyError, match="aoe_mask"):
+        id_map.feature_id("aoe_mask")
+    territory_here_feature_id = id_map.feature_id("territory:here")
+    id_map.feature_id("territory:north")
+    id_map.feature_id("territory:south")
+    id_map.feature_id("territory:east")
+    id_map.feature_id("territory:west")
+
+    sim = Simulation(env)
+    sim.step()
+    all_obs = sim._c_sim.observations()
+    territory_here_tokens = sum(1 for obs in all_obs.tolist() for token in obs if token[1] == territory_here_feature_id)
+
+    assert territory_here_tokens == env.game.num_agents
 
 
 def test_tutorial_spawn_territory_offsets_passive_hp_drain() -> None:
@@ -130,19 +145,6 @@ def test_tutorial_spawn_territory_offsets_passive_hp_drain() -> None:
 
     for i in range(2):
         assert sim.agent(i).inventory.get("hp", 0) == 100
-
-
-@pytest.mark.skip(reason="Requires territory-only AOEs and team tag setup; not wired up yet")
-def test_cvc_emits_aoe_mask_tokens_runtime() -> None:
-    env = make_machina1_mission().make_env()
-    id_map = env.game.id_map()
-    aoe_mask_feature_id = id_map.feature_id("aoe_mask")
-
-    sim = Simulation(env)
-    sim.step()
-    obs = sim._c_sim.observations()[0]
-    aoe_mask_tokens = sum(1 for token in obs.tolist() if token[1] == aoe_mask_feature_id)
-    assert aoe_mask_tokens > 0
 
 
 def test_tag_mutations_reference_valid_tags():

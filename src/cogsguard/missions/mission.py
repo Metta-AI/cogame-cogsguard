@@ -40,7 +40,7 @@ class CvCMission(CoGameMission):
                         local_position=True,
                         last_action_move=True,
                     ),
-                    aoe_mask=True,
+                    territory=True,
                 ),
                 actions=ActionsConfig(
                     move=MoveActionConfig(),
