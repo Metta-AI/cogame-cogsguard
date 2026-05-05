@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import override
+from typing_extensions import override
 
 from cogames.core import Deps
 from cogsguard.game.cargo import CargoLimitVariant
