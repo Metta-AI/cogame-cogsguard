@@ -6,7 +6,8 @@ These events create the spreading/scrambling behavior that pressures players.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, override
+from typing import TYPE_CHECKING, Optional
+from typing_extensions import override
 
 from pydantic import Field
 

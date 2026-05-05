@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Literal, override
+from typing import TYPE_CHECKING, Generic, Literal, TypeVar
+from typing_extensions import override
 
 from pydantic import Field
 
@@ -65,7 +66,10 @@ __all__ = [
 ]
 
 
-class EnvNodeVariant[T](CoGameMissionVariant, ABC):
+T = TypeVar("T")
+
+
+class EnvNodeVariant(CoGameMissionVariant, ABC, Generic[T]):
     @abstractmethod
     def extract_node(self, env: MettaGridConfig) -> T: ...
 

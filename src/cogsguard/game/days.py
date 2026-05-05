@@ -5,7 +5,8 @@ Periodic solar regen that oscillates between day and night levels.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, override
+from typing import TYPE_CHECKING
+from typing_extensions import override
 
 from pydantic import Field
 
